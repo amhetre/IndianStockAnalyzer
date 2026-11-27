@@ -13,7 +13,9 @@ async function req(url, opts = {}) {
 
 export const api = {
   indices: () => req("/api/market/indices"),
-  movers: () => req("/api/market/movers?n=10"),
+  movers: (n = 10) => req(`/api/market/movers?n=${n}`),
+  news: (cat = "markets", limit = 40) => req(`/api/news?category=${cat}&limit=${limit}`),
+  companyNews: (name, symbol) => req(`/api/news/company?name=${encodeURIComponent(name)}${symbol ? `&symbol=${encodeURIComponent(symbol)}` : ""}`),
   ipos: () => req("/api/market/ipos"),
   search: (q, signal) => req(`/api/search?q=${encodeURIComponent(q)}`, { signal }),
   summary: (c, refresh = false) => req(`/api/stock/summary?${companyQuery(c)}${refresh ? "&refresh=true" : ""}`),
@@ -110,4 +112,15 @@ export function marketStatus(now = new Date()) {
   if (mins < 9 * 60 + 15) return { open: false, label: "Pre-open session" };
   if (mins <= 15 * 60 + 30) return { open: true, label: "Market open" };
   return { open: false, label: "Market closed" };
+}
+
+// "5 min ago", "3 h ago", "27 Nov" for news timestamps (epoch seconds)
+export function timeAgo(sec) {
+  if (!sec) return "";
+  const d = Date.now() / 1000 - sec;
+  if (d < 60) return "just now";
+  if (d < 3600) return `${Math.floor(d / 60)} min ago`;
+  if (d < 86400) return `${Math.floor(d / 3600)} h ago`;
+  if (d < 172800) return "yesterday";
+  return new Date(sec * 1000).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 }

@@ -311,8 +311,6 @@ tbody tr:last-child td { border-bottom: 0; }
 
 @media (max-width: 640px) {
   main { padding: 0 16px 24px; }
-  .topbar { gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
-  .topbar-search { flex-basis: 100%; max-width: none; }
   .brand small { display: none; }
   .hero { padding: 28px 0 18px; }
   .index-grid, .movers-grid { grid-template-columns: 1fr; }
@@ -415,11 +413,3 @@ tr.clickable:hover { background: var(--surface-2); }
 .people li { display: flex; flex-direction: column; font-size: 14px; }
 .people small { color: var(--muted-foreground); font-size: 12px; }
 @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
-
-/* ---------- top bar: never overflow ---------- */
-.topbar-search, .topbar-search .search, .topbar-search .search-field { min-width: 0; }
-@media (max-width: 960px) {
-  .topbar { flex-wrap: wrap; gap: 12px; position: relative; } /* two rows: let it scroll so sticky tabs below are not hidden */
-  .topbar-search { order: 5; flex-basis: 100%; max-width: none; margin-left: 0; }
-  .brand small { display: none; }
-}

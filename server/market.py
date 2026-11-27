@@ -149,6 +149,8 @@ def _movers_from_nse() -> Optional[list[dict]]:
             "name": (r.get("meta") or {}).get("companyName") or sym,
             "last": _f(r.get("lastPrice")), "change": _f(r.get("change")), "pct": _f(r.get("pChange")),
             "volume": _f(r.get("totalTradedVolume")),
+            "high_52w": _f(r.get("yearHigh")), "low_52w": _f(r.get("yearLow")),
+            "industry": (r.get("meta") or {}).get("industry"),
         })
     return rows or None
 
@@ -189,10 +191,14 @@ def get_movers(n: int = 10) -> dict:
         rows.sort(key=lambda r: r["pct"], reverse=True)
         adv = sum(1 for r in rows if r["pct"] > 0)
         dec = sum(1 for r in rows if r["pct"] < 0)
+        for r in rows:  # traded value in ₹, for "most active"
+            r["value"] = round(r["volume"] * r["last"], 0) if r.get("volume") and r.get("last") else None
         return {"source": source, "gainers": rows[:n],
                 "losers": sorted(rows, key=lambda r: r["pct"])[:n],
+                "active": sorted((r for r in rows if r["value"]), key=lambda r: r["value"], reverse=True)[:n],
+                "all": sorted(rows, key=lambda r: r["symbol"]),
                 "advances": adv, "declines": dec, "unchanged": len(rows) - adv - dec}
-    return _cached("movers", 60, produce)
+    return _cached(f"movers:{n}", 60, produce)
 
 
 # ---------------------------------------------------------------- IPOs

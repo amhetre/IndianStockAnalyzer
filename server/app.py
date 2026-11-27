@@ -23,7 +23,7 @@ from pydantic import BaseModel, Field
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from server import ipo_detail as ipo_details  # noqa: E402
-from server import market, portfolio, quote, reports  # noqa: E402
+from server import market, news, portfolio, quote, reports  # noqa: E402
 from server import search as fast_search  # noqa: E402
 from utils.logger import setup_logging  # noqa: E402
 
@@ -205,6 +205,19 @@ def alerts_test():
 @app.on_event("startup")
 def _start_alerts():
     portfolio.start_alert_worker()
+
+
+# ---------------------------------------------------------------- news
+@app.get("/api/news")
+def market_news(category: str = Query("markets", pattern="^(all|markets|stocks|ipo|economy)$"),
+                limit: int = Query(40, ge=1, le=100)):
+    return news.get_news(category, limit)
+
+
+@app.get("/api/news/company")
+def stock_news(name: str = Query(..., min_length=1, max_length=120), symbol: Optional[str] = Query(None, max_length=30),
+               limit: int = Query(20, ge=1, le=50)):
+    return news.company_news(name, symbol, limit)
 
 
 # ---------------------------------------------------------------- AdSense ads.txt

@@ -6,6 +6,25 @@ import ReportSection from "../components/ReportSection.jsx";
 import TradingChart from "../components/TradingChart.jsx";
 import Projection from "../components/Projection.jsx";
 import AdSlot from "../components/AdSlot.jsx";
+import NewsList from "../components/NewsList.jsx";
+
+function CompanyNews({ name, symbol }) {
+  const [data, setData] = useState(null);
+  const [err, setErr] = useState(null);
+  useEffect(() => {
+    if (!name) return;
+    setData(null);
+    api.companyNews(name, symbol).then(setData).catch((e) => setErr(e.message));
+  }, [name, symbol]);
+  return (
+    <section className="card">
+      <div className="card-head sec-head"><h2>{name} news</h2></div>
+      {err ? <div className="error-box">{err}</div>
+        : <NewsList items={data?.items ?? null} showSummary={false} empty={`No recent news found for ${name}.`} />}
+      <p className="note" style={{ padding: "0 16px 6px" }}>Headlines via Google News (India). Open a headline to read it on the publisher's site.</p>
+    </section>
+  );
+}
 
 function WatchButton({ company }) {
   const tk = tickerOf(company);
@@ -25,7 +44,7 @@ function WatchButton({ company }) {
 }
 
 const TABS = [
-  ["chart", "Chart"], ["projection", "Projection"], ["overview", "Overview"], ["price", "Price"], ["ratios", "Ratios"], ["history", "History"],
+  ["chart", "Chart"], ["news", "News"], ["projection", "Projection"], ["overview", "Overview"], ["price", "Price"], ["ratios", "Ratios"], ["history", "History"],
   ["periods", "3M–5Y"], ["roic", "ROIC vs WACC"], ["debt", "Debt & Interest"], ["cash", "Cash flow"],
   ["holding", "Shareholding"], ["peers", "Peers"], ["risk", "Risk & Score"], ["explain", "Explanations"],
   ["learn", "Learn"], ["sources", "Sources"],
@@ -151,15 +170,18 @@ export default function Report() {
       </div>
 
       <nav className="detail-tabs" ref={tabsRef} role="tablist">
-        {TABS.filter(([k]) => !(company.demo && k === "chart")).map(([k, l]) => (
+        {TABS.filter(([k]) => !(company.demo && (k === "chart" || k === "news"))).map(([k, l]) => (
           <button key={k} role="tab" aria-selected={k === tab} className={k === tab ? "on" : ""} onClick={() => setTab(k)}>
             {l}
-            {k !== "chart" && k !== "projection" && loaded[k] && <i className="tab-dot" aria-hidden />}
+            {k !== "chart" && k !== "projection" && k !== "news" && loaded[k] && <i className="tab-dot" aria-hidden />}
           </button>
         ))}
       </nav>
 
-      {tab === "projection" ? (
+      {tab === "news" ? (
+        company.demo ? <div className="card empty">News is not available for the synthetic demo company.</div>
+          : <CompanyNews name={summary?.name || quote?.name || company.name || company.nse_symbol} symbol={company.nse_symbol} />
+      ) : tab === "projection" ? (
         <Projection company={company} />
       ) : tab === "chart" ? (
         quoteErr && !quote ? (
