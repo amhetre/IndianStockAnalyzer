@@ -122,7 +122,6 @@ function Sidebar({ open, onClose }) {
             );
           })}
         </nav>
-        <div className="side-foot">Data: NSE, Yahoo Finance, Screener.in, ET, Mint, Business Standard. Not investment advice.</div>
       </aside>
       {open && <div className="sidebar-scrim" onClick={onClose} aria-hidden />}
     </>
@@ -155,9 +154,6 @@ export default function App() {
         <main>
           <Outlet />
         </main>
-        <footer className="footer">
-          Data: NSE India, Yahoo Finance, Screener.in · News: Economic Times, Mint, Business Standard, Google News · Prices may be delayed · Not investment advice.
-        </footer>
       </div>
     </div>
   );
