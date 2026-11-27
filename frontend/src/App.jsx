@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import SearchBox from "./components/SearchBox.jsx";
 import ThemeToggle from "./components/ThemeToggle.jsx";
+import { useConfig } from "./config.js";
 
 // Icons: Lucide (https://lucide.dev, ISC licence) paths, inlined.
 const ICONS = {
@@ -25,8 +26,8 @@ const Icon = ({ name, size = 18 }) => (
 const q = (p, k) => p.get(k) || "";
 const NAV = [
   { label: "Home", icon: "home", to: "/", match: (path) => path === "/" },
-  { label: "Watchlist", icon: "star", to: "/portfolio?tab=watch", match: (path, p) => path === "/portfolio" && q(p, "tab") === "watch" },
-  { label: "Portfolio", icon: "briefcase", to: "/portfolio", match: (path, p) => path === "/portfolio" && q(p, "tab") !== "watch" },
+  { label: "Watchlist", icon: "star", needs: "portfolio", to: "/portfolio?tab=watch", match: (path, p) => path === "/portfolio" && q(p, "tab") === "watch" },
+  { label: "Portfolio", icon: "briefcase", needs: "portfolio", to: "/portfolio", match: (path, p) => path === "/portfolio" && q(p, "tab") !== "watch" },
   {
     label: "Stocks", icon: "list", key: "stocks", items: [
       { label: "NIFTY 50 Stocks", to: "/stocks", match: (path) => path === "/stocks" },
@@ -80,6 +81,7 @@ function Sidebar({ open, onClose }) {
   const { pathname, search } = useLocation();
   const params = new URLSearchParams(search);
   const [expanded, setExpanded] = useState(loadOpen);
+  const cfg = useConfig();
   const toggle = (k) => setExpanded((e) => {
     const n = { ...e, [k]: !e[k] };
     try { localStorage.setItem(OPEN_KEY, JSON.stringify(n)); } catch { /* ignore */ }
@@ -91,7 +93,7 @@ function Sidebar({ open, onClose }) {
       <aside className={`sidebar ${open ? "open" : ""}`} aria-label="Main navigation">
         <div className="sidebar-brand"><Brand /></div>
         <nav className="side-nav">
-          {NAV.map((item) => {
+          {NAV.filter((item) => !item.needs || cfg?.[item.needs]).map((item) => {
             if (!item.items) {
               const on = item.match(pathname, params);
               return (

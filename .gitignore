@@ -15,3 +15,6 @@ frontend/.env
 .claude/settings.local.json
 *.pkl
 .env
+node_modules/
+.wrangler/
+.dev.vars

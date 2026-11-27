@@ -1,0 +1,29 @@
+// Cloudflare Workers + Containers deployment. See DEPLOY.md.
+// Workers Builds runs `npx wrangler deploy` on every push to main: it builds the
+// Dockerfile, pushes the image and starts serving it.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "indian-stock-analyzer",
+  "main": "cloudflare/worker.js",
+  "compatibility_date": "2026-11-27",
+  "observability": { "enabled": true },
+
+  "containers": [
+    {
+      "class_name": "StockAnalyzerContainer",
+      "image": "./Dockerfile",
+      "instance_type": "basic",
+      "max_instances": 2
+    }
+  ],
+
+  "durable_objects": {
+    "bindings": [{ "name": "APP", "class_name": "StockAnalyzerContainer" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["StockAnalyzerContainer"] }],
+
+  // Plain settings. Secrets (TELEGRAM_BOT_TOKEN, ...) go in the dashboard: Settings > Variables and Secrets.
+  "vars": {
+    "ISA_ENABLE_PORTFOLIO": "false"
+  }
+}

@@ -1,38 +1,45 @@
 import { useEffect, useRef } from "react";
+import { useConfig } from "../config.js";
 import { isPro } from "../subscription.js";
 
-// Google AdSense, configured in frontend/.env (see .env.example):
-//   VITE_ADSENSE_CLIENT=ca-pub-XXXXXXXXXXXXXXXX
-//   VITE_ADSENSE_SLOT_HOME / _REPORT / _PORTFOLIO = ad unit ids from the AdSense dashboard
+// Google AdSense. Configured on the server at runtime (environment variables
+// ADSENSE_CLIENT or ADSENSE_PUB_ID, and ADSENSE_SLOT_HOME / _REPORT / _PORTFOLIO;
+// see DEPLOY.md), delivered through /api/config. For local frontend development the
+// VITE_ADSENSE_* values in frontend/.env are used as a fallback.
 // Without a client id nothing is rendered in production; dev shows a placeholder box.
 // Pro subscribers never see ads.
 
-const CLIENT = import.meta.env.VITE_ADSENSE_CLIENT;
-const SLOTS = {
-  home: import.meta.env.VITE_ADSENSE_SLOT_HOME,
-  report: import.meta.env.VITE_ADSENSE_SLOT_REPORT,
-  portfolio: import.meta.env.VITE_ADSENSE_SLOT_PORTFOLIO,
+const BUILD = {
+  client: import.meta.env.VITE_ADSENSE_CLIENT,
+  slots: {
+    home: import.meta.env.VITE_ADSENSE_SLOT_HOME,
+    report: import.meta.env.VITE_ADSENSE_SLOT_REPORT,
+    portfolio: import.meta.env.VITE_ADSENSE_SLOT_PORTFOLIO,
+  },
 };
 
 let scriptAdded = false;
-function loadScript() {
-  if (scriptAdded || !CLIENT) return;
+function loadScript(client) {
+  if (scriptAdded || !client) return;
   scriptAdded = true;
   const s = document.createElement("script");
   s.async = true;
-  s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${CLIENT}`;
+  s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(client)}`;
   s.crossOrigin = "anonymous";
   document.head.appendChild(s);
 }
 
 export default function AdSlot({ slot }) {
   const ref = useRef(null);
-  const id = SLOTS[slot];
+  const cfg = useConfig();
+  const ads = cfg?.adsense || (BUILD.client ? BUILD : null);
+  const CLIENT = ads?.client;
+  const id = ads?.slots?.[slot];
   const enabled = !isPro() && CLIENT && id;
 
   useEffect(() => {
     if (!enabled || ref.current?.dataset.pushed) return;
-    loadScript();
+    loadScript(CLIENT);
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
       ref.current.dataset.pushed = "1";
@@ -42,7 +49,7 @@ export default function AdSlot({ slot }) {
   if (isPro()) return null;
   if (!enabled) {
     return import.meta.env.DEV
-      ? <div className="ad-slot"><div className="ad-placeholder">Ad space · “{slot}” (set VITE_ADSENSE_* in frontend/.env)</div></div>
+      ? <div className="ad-slot"><div className="ad-placeholder">Ad space · “{slot}” (set ADSENSE_* on the server)</div></div>
       : null;
   }
   return (

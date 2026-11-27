@@ -202,3 +202,7 @@ Run the web app with `python -m uvicorn server.app:app --port 8000` and open <ht
 3. Set `$env:ADSENSE_PUB_ID="pub-XXXXXXXXXXXXXXXX"` so the server serves `/ads.txt`.
 
 Ads appear on the home, stock report and portfolio pages. Without ids, nothing is shown (dev mode shows a placeholder box). `frontend/src/subscription.js` holds the plan switch: when a subscription is added, Pro users get `"pro"` and ads disappear for them.
+
+## 10. Deploying
+
+The app ships as one Docker image (`Dockerfile`) and deploys to **Cloudflare Containers** straight from GitHub. Every push to `main` rebuilds and redeploys it. See **[DEPLOY.md](DEPLOY.md)** for the steps, settings and costs.

@@ -3,6 +3,7 @@ import AdSlot from "../components/AdSlot.jsx";
 import { Link, useSearchParams } from "react-router-dom";
 import { abbr, api, companyFromTicker, companyToQuery, fmt, fmtChg, fmtPct, marketStatus, tickerOf, tone } from "../api.js";
 import SearchBox from "../components/SearchBox.jsx";
+import { useConfig } from "../config.js";
 
 const num = (v) => (v === "" || v == null ? null : Number(v));
 const sym = (tk) => tk.split(".")[0];
@@ -251,6 +252,19 @@ function Watchlist() {
 }
 
 export default function Portfolio() {
+  const cfg = useConfig();
+  if (cfg && !cfg.portfolio) {
+    return (
+      <div className="card empty" style={{ marginTop: 24, flexDirection: "column" }}>
+        <h2 style={{ margin: 0 }}>Portfolio &amp; watchlist are coming soon</h2>
+        <p style={{ margin: 0 }}>They will be available once accounts are launched.</p>
+      </div>
+    );
+  }
+  return <PortfolioPage />;
+}
+
+function PortfolioPage() {
   const [params, setParams] = useSearchParams();
   const tab = params.get("tab") === "watch" ? "watch" : "holdings";
   useEffect(() => { document.title = `${tab === "watch" ? "Watchlist" : "Portfolio"} · Stock Analyzer`; }, [tab]);

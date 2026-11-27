@@ -1,0 +1,12 @@
+{
+  "name": "indian-stock-analyzer-deploy",
+  "private": true,
+  "description": "Cloudflare deployment tooling. The app itself is in server/ (Python) and frontend/ (React).",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "check": "wrangler deploy --dry-run"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

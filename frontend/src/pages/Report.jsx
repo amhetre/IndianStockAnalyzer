@@ -31,7 +31,7 @@ function WatchButton({ company }) {
   const [on, setOn] = useState(null);
   useEffect(() => {
     if (!tk) return;
-    api.watchlist().then((w) => setOn(w.items.some((i) => i.symbol === tk.toUpperCase()))).catch(() => setOn(false));
+    api.watchlist().then((w) => setOn(w.items.some((i) => i.symbol === tk.toUpperCase()))).catch(() => setOn(null)); // hidden when the watchlist is off on this server
   }, [tk]);
   if (!tk || company.demo || on == null) return null;
   const toggle = () => (on ? api.deleteWatch(tk) : api.saveWatch({ symbol: tk, name: company.name }))

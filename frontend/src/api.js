@@ -23,6 +23,7 @@ export const api = {
   quote: (c) => req(`/api/quote?${tickerQuery(c)}`),
   history: (c, range) => req(`/api/history?${tickerQuery(c)}&range=${range}`),
   projection: (c) => req(c.demo ? "/api/projection?demo=true" : `/api/projection?${tickerQuery(c)}`),
+  config: () => req("/api/config"),
   portfolio: () => req("/api/portfolio"),
   addHolding: (h) => req("/api/portfolio/holdings", json("POST", h)),
   deleteHolding: (id) => req(`/api/portfolio/holdings/${id}`, { method: "DELETE" }),
