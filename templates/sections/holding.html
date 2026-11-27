@@ -1,0 +1,6 @@
+  <h2>Promoter & shareholder pattern (last ~3 years)</h2>
+  <p class="muted">Source: {{ res.promoter.source or "unavailable" }}{% if res.promoter.pledge_source %}; pledge: {{ res.promoter.pledge_source }}{% endif %}. Reporting quarters: {{ res.promoter.first_quarter or "—" }} to {{ res.promoter.last_quarter or "—" }}.</p>
+  <div class="panel"><ul class="pts">{% for x in res.promoter.points %}<li>{{ x }}</li>{% endfor %}</ul></div>
+  <div class="chart">{{ figs.promoter | safe }}</div>
+  <div class="grid2"><div class="chart">{{ figs.fii_dii | safe }}</div><div class="chart">{{ figs.pledge | safe }}</div></div>
+  <div class="tblwrap">{{ promoter_tbl | safe }}</div>

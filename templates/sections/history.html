@@ -1,0 +1,6 @@
+  <h2>Historical financial performance</h2>
+  <p class="muted">₹ crore unless stated. Basis: {{ d.statement_basis }} ({{ d.statement_source }}). Capital employed = {{ res.annual_table.attrs.get('ce_definition', 'N/A') }}.</p>
+  <div class="chart">{{ figs.financials | safe }}</div>
+  <h3>Annual</h3><div class="tblwrap">{{ history_tbl | safe }}</div>
+  <div class="chart">{{ figs.quarterly | safe }}</div>
+  <h3>Quarterly</h3><div class="tblwrap">{{ quarterly_tbl | safe }}</div>

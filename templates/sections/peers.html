@@ -1,0 +1,5 @@
+  <h2>Peer comparison</h2>
+  <p class="muted">Peer source: {{ res.peers.source }}. All peers are computed with the same code and definitions.</p>
+  <div class="panel"><ul class="pts">{% for x in res.peers.points %}<li>{{ x }}</li>{% endfor %}</ul></div>
+  <div class="grid2"><div class="chart">{{ figs.peer_pe | safe }}</div><div class="chart">{{ figs.peer_roe | safe }}</div></div>
+  <div class="tblwrap">{{ peer_tbl | safe }}</div>

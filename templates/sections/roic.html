@@ -1,0 +1,7 @@
+  <h2>{{ res.roic_wacc.spread_kind or "ROIC vs WACC" }}</h2>
+  <div class="panel"><p><b>{{ res.roic_wacc.verdict }}</b></p>
+  <p class="muted">WACC is an <b>estimate</b>: it depends on the assumptions listed below (risk-free rate, equity risk premium, beta). It is the average yearly cost of the money a company uses, from shareholders and lenders. {{ res.roic_wacc.history_note or "" }}</p>
+  {% for w in res.roic_wacc.warnings %}<p><span class="badge b-warn">Note</span> {{ w }}</p>{% endfor %}</div>
+  <div class="tblwrap">{{ rw_tbl | safe }}</div>
+  <div class="chart">{{ figs.roic_wacc | safe }}</div>
+  <div class="tblwrap">{{ rw_hist_tbl | safe }}</div>

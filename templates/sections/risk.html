@@ -1,0 +1,18 @@
+  <h2>Overall assessment</h2>
+  <div class="panel" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+    <div><div class="score-big">{% if res.score.overall is not none %}{{ "%.0f"|format(res.score.overall) }}{% else %}—{% endif %}<span style="font-size:20px;color:var(--muted)">/100</span></div>
+    <div><span class="badge {% if res.score.overall and res.score.overall >= 60 and not res.score.critical_flags %}b-good{% elif res.score.overall and res.score.overall >= 45 and not res.score.critical_flags %}b-warn{% else %}b-crit{% endif %}">{{ res.score.label }}</span></div>
+    <div class="muted">Data coverage for scoring: {{ res.score.coverage_pct }}%</div></div>
+    <div style="flex:1;min-width:260px">{{ res.overall_text }}</div>
+  </div>
+  <div class="chart">{{ figs.score | safe }}</div>
+  <p class="muted">{{ res.score.method }}</p>
+  <div class="tblwrap">{{ score_tbl | safe }}</div>
+  <h2>Valuation – why it may look expensive or inexpensive</h2>
+  <div class="panel"><p>{{ res.valuation.summary }}</p></div>
+  <div class="grid2">
+    <div class="panel"><h3>Reasons supporting a premium</h3>{% if res.valuation.premium_reasons %}<ul class="pts">{% for x in res.valuation.premium_reasons %}<li>{{ x }}</li>{% endfor %}</ul>{% else %}<p class="muted">None found in the data.</p>{% endif %}</div>
+    <div class="panel"><h3>Reasons supporting a discount</h3>{% if res.valuation.discount_reasons %}<ul class="pts">{% for x in res.valuation.discount_reasons %}<li>{{ x }}</li>{% endfor %}</ul>{% else %}<p class="muted">None found in the data.</p>{% endif %}</div>
+  </div>
+  <div class="panel"><h3>Financial warning signs & risks</h3>{% if res.warning_signs %}<ul class="pts">{% for x in res.warning_signs %}<li>{{ x }}</li>{% endfor %}</ul>{% else %}<p class="muted">No warning signs detected in available data.</p>{% endif %}</div>
+  <div class="panel"><h3>Missing information</h3>{% if res.missing %}<ul class="pts">{% for x in res.missing %}<li>{{ x }}</li>{% endfor %}</ul>{% else %}<p class="muted">None.</p>{% endif %}</div>

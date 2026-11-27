@@ -1,0 +1,7 @@
+  <h2>Fundamental ratios</h2>
+  <div class="cards">{% for c in ratio_cards %}<div class="card {{ c.status }}"><div class="l">{{ c.label }}{% if c.hint %}<span class="hint" title="{{ c.hint }}">!</span>{% endif %}</div><div class="v">{{ c.value }}</div><div class="s">{% if c.remark %}<span class="badge {{ c.remark_class }}">{{ c.remark }}</span> {% endif %}{{ c.sub }}</div></div>{% endfor %}</div>
+  <p class="muted">Hover the <span class="hint" title="Example: Formula: Net profit / Average equity × 100">!</span> badge to see how a parameter is calculated and its Average / Good / Best benchmark bands.</p>
+  <h3>Calculation details (source values, formula, period, status)</h3>
+  <div class="tblwrap">{{ ratio_tbl | safe }}</div>
+  <div class="grid2"><div class="chart">{{ figs.margins | safe }}</div><div class="chart">{{ figs.eps | safe }}</div></div>
+  <div class="grid2"><div class="chart">{{ figs.returns | safe }}</div><div class="chart">{{ figs.pe_history | safe }}</div></div>

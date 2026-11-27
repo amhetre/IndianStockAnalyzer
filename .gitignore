@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+cache/*
+!cache/.gitkeep
+output/*
+!output/.gitkeep
+logs/*
+!logs/.gitkeep
+frontend/node_modules/
+frontend/dist/
+data/
+frontend/.env
+.tokensave/
+.claude/settings.local.json
+*.pkl
+.env

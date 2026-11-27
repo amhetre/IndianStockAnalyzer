@@ -1,0 +1,11 @@
+  <h2>Debt analysis</h2>
+  <div class="panel"><p>{{ res.debt.summary }}</p></div>
+  <div class="grid2"><div class="chart">{{ figs.debt | safe }}</div><div class="chart">{{ figs.de | safe }}</div></div>
+  <div class="tblwrap">{{ debt_tbl | safe }}</div>
+  <h2>Interest coverage</h2>
+  <div class="panel">
+    <p>Status: <span class="badge {% if res.interest_coverage.label in ['Strong','Strong (no interest)'] %}b-good{% elif res.interest_coverage.label == 'Moderate' %}b-warn{% elif res.interest_coverage.label in ['Weak','Serious concern'] %}b-crit{% else %}b-na{% endif %}">{{ res.interest_coverage.label or "N/A" }}</span></p>
+    <ul class="pts">{% for e in res.interest_coverage.explanation %}<li>{{ e }}</li>{% endfor %}</ul>
+  </div>
+  <div class="chart">{{ figs.icr | safe }}</div>
+  <div class="tblwrap">{{ icr_tbl | safe }}</div>

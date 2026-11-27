@@ -1,0 +1,4 @@
+  <h2>Data sources</h2><div class="tblwrap">{{ sources_tbl | safe }}</div>
+  <h3>Line-item derivations</h3><div class="tblwrap">{{ item_src_tbl | safe }}</div>
+  <h2>Assumptions (config.py)</h2><div class="tblwrap">{{ assumptions_tbl | safe }}</div>
+  <h2>Data coverage — {{ res.coverage.coverage_pct }}%</h2><div class="tblwrap">{{ coverage_tbl | safe }}</div>

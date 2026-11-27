@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+{{ plotly_js | safe }}
+<style>
+  :root{--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;
+        --accent:#2a78d6;--good:#0ca30c;--warn:#fab219;--serious:#ec835a;--crit:#d03b3b;--good-text:#006300}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);font:14px/1.55 Inter,"Segoe UI",Roboto,Arial,sans-serif}
+  header{background:var(--surface);border-bottom:1px solid var(--grid);padding:18px 24px}
+  header h1{margin:0;font-size:22px}
+  .meta{color:var(--ink2);font-size:13px;margin-top:4px}
+  .meta span{margin-right:14px;display:inline-block;max-width:100%;overflow-wrap:anywhere}
+  .demo{background:#fff3d6;border:1px solid var(--warn);color:#5c4200;padding:10px 14px;margin:12px 24px 0;border-radius:8px;font-weight:600}
+  nav{position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--grid);
+      display:flex;gap:4px;overflow-x:auto;padding:6px 16px;scrollbar-width:thin}
+  nav button{border:0;background:none;padding:8px 12px;border-radius:6px;color:var(--ink2);font:inherit;cursor:pointer;white-space:nowrap}
+  nav button.active{background:#e8f0fb;color:var(--accent);font-weight:600}
+  main{max-width:1280px;margin:0 auto;padding:16px 24px 48px}
+  section{display:none}
+  section.active{display:block}
+  h2{font-size:18px;margin:22px 0 10px}
+  h3{font-size:15px;margin:18px 0 8px;color:var(--ink)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+  .card{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:12px 14px}
+  .card .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+  .card .v{font-size:21px;font-weight:650;margin-top:2px}
+  .card .s{color:var(--ink2);font-size:12px}
+  .card.up .s{color:var(--good-text)} .card.down .s{color:var(--crit)}
+  .card.na .v{color:var(--muted);font-size:15px}
+  .panel{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:14px 16px;margin:12px 0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:860px){.grid2{grid-template-columns:1fr} main{padding:12px} header{padding:14px}}
+  .chart{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:4px;margin:12px 0;min-width:0}
+  .tblwrap{overflow-x:auto;margin:8px 0}
+  table.tbl{border-collapse:collapse;width:100%;font-size:12.5px;background:var(--surface)}
+  table.tbl th{background:#f1f0ec;color:var(--ink2);font-weight:600;text-align:left;padding:7px 8px;border-bottom:1px solid var(--axis);white-space:nowrap}
+  table.tbl td{padding:6px 8px;border-bottom:1px solid var(--grid);vertical-align:top}
+  table.tbl tr:hover td{background:#f5f8fd}
+  ul.pts{margin:6px 0;padding-left:20px} ul.pts li{margin:4px 0}
+  .muted{color:var(--muted)}
+  .badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600}
+  .b-good{background:#e2f4e2;color:var(--good-text)} .b-warn{background:#fff3d6;color:#5c4200}
+  .b-crit{background:#fbe4e4;color:#8f1f1f} .b-na{background:#eeeeea;color:var(--ink2)}
+  .qa dt{font-weight:600;margin-top:10px} .qa dd{margin:2px 0 0 0;color:var(--ink2)}
+  details.exp{background:var(--surface);border:1px solid var(--grid);border-radius:8px;margin:8px 0;padding:10px 14px}
+  details.exp summary{cursor:pointer;font-weight:600}
+  details.exp summary .badge{margin-left:8px}
+  .score-big{font-size:46px;font-weight:700;line-height:1}
+  .disclaimer{font-size:12px;color:var(--ink2);border-top:1px solid var(--grid);margin-top:28px;padding-top:12px}
+  /* '!' info badge – hover shows the formula / benchmark bands */
+  .hint{display:inline-flex;align-items:center;justify-content:center;min-width:15px;height:15px;padding:0 4px;
+        border-radius:8px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;cursor:help;
+        vertical-align:middle;margin-left:4px;line-height:1;user-select:none}
+  .hint:hover{background:#1b5fa5}
+  th .hint{background:#898781} th .hint:hover{background:#52514e}
+  .b-best{background:#d6f2d6;color:#006300} .b-avg{background:#fff3d6;color:#5c4200}
+  .b-low{background:#fbe4e4;color:#8f1f1f}
+  .formula{background:#f1f0ec;border-left:3px solid var(--accent);border-radius:6px;padding:8px 12px;
+           margin:8px 0;font-family:"Cascadia Mono",Consolas,monospace;font-size:13px}
+  .formula .fn{display:block;font-family:inherit;color:var(--ink2);font-size:12.5px;margin-top:4px}
+  .note-box{background:#fff3d6;border:1px solid var(--warn);border-radius:8px;padding:8px 12px;margin:8px 0;
+            color:#5c4200;font-size:13px}
+  .learn h2{border-bottom:1px solid var(--grid);padding-bottom:4px}
+  /* checklist */
+  .cl-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-weight:600}
+  .cl-bar{background:var(--grid);border-radius:999px;height:10px;margin:8px 0 12px;overflow:hidden}
+  .cl-bar>div{background:var(--good);height:100%;width:0;transition:width .2s}
+  ul.cl{list-style:none;margin:0;padding:0}
+  ul.cl li{padding:6px 0;border-bottom:1px solid var(--grid)}
+  ul.cl label{display:flex;gap:9px;align-items:flex-start;cursor:pointer;font-weight:400}
+  ul.cl input{margin-top:3px;accent-color:var(--good);width:16px;height:16px;flex:none}
+  ul.cl li.done label{color:var(--muted);text-decoration:line-through}
+  #cl-reset{border:1px solid var(--grid);background:var(--surface);border-radius:6px;padding:4px 10px;
+            font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink2)}
+  #cl-reset:hover{background:#f5f8fd}
+</style>
+</head>
+<body>
+<header>
+  <h1>{{ ident.name }}</h1>
+  <div class="meta">
+    {% if ident.nse_symbol %}<span>NSE: <b>{{ ident.nse_symbol }}</b></span>{% endif %}
+    {% if ident.bse_code %}<span>BSE: <b>{{ ident.bse_code }}</b></span>{% endif %}
+    {% if ident.isin %}<span>ISIN: {{ ident.isin }}</span>{% endif %}
+    <span>Sector: {{ ident.sector or "N/A" }}{% if ident.industry %} / {{ ident.industry }}{% endif %}</span>
+    <span>Treatment: {{ ident.sector_class | replace("_"," ") }}</span>
+    <span>Statements: {{ d.statement_basis }} ({{ d.statement_source or "none" }})</span>
+    <span>Generated: {{ generated }}</span>
+  </div>
+</header>
+{% if d.is_demo %}<div class="demo">⚠ SYNTHETIC DEMO DATA – this report uses made-up numbers to demonstrate the layout. It does not describe any real company.</div>{% endif %}
+<nav id="tabs">
+  <button data-t="overview" class="active">Overview</button>
+  <button data-t="price">Price</button>
+  <button data-t="ratios">Ratios</button>
+  <button data-t="history">History</button>
+  <button data-t="periods">3M–5Y</button>
+  <button data-t="roic">ROIC vs WACC</button>
+  <button data-t="debt">Debt & Interest</button>
+  <button data-t="cash">Cash flow</button>
+  <button data-t="holding">Shareholding</button>
+  <button data-t="peers">Peers</button>
+  <button data-t="risk">Risk & Score</button>
+  <button data-t="explain">Explanations</button>
+  <button data-t="learn">Learn</button>
+  <button data-t="sources">Sources</button>
+</nav>
+<main>
+
+<section id="overview" class="active">
+{% include "sections/overview.html" %}
+</section>
+
+<section id="price">
+{% include "sections/price.html" %}
+</section>
+
+<section id="ratios">
+{% include "sections/ratios.html" %}
+</section>
+
+<section id="history">
+{% include "sections/history.html" %}
+</section>
+
+<section id="periods">
+{% include "sections/periods.html" %}
+</section>
+
+<section id="roic">
+{% include "sections/roic.html" %}
+</section>
+
+<section id="debt">
+{% include "sections/debt.html" %}
+</section>
+
+<section id="cash">
+{% include "sections/cash.html" %}
+</section>
+
+<section id="holding">
+{% include "sections/holding.html" %}
+</section>
+
+<section id="peers">
+{% include "sections/peers.html" %}
+</section>
+
+<section id="risk">
+{% include "sections/risk.html" %}
+</section>
+
+<section id="explain">
+{% include "sections/explain.html" %}
+</section>
+
+<section id="learn" class="learn">
+{% include "sections/learn.html" %}
+</section>
+
+<section id="sources">
+{% include "sections/sources.html" %}
+</section>
+
+<div class="disclaimer">{{ res.disclaimer }}</div>
+</main>
+<script>
+  const btns=document.querySelectorAll('#tabs button');
+  btns.forEach(b=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.remove('active'));b.classList.add('active');
+    document.querySelectorAll('main section').forEach(s=>s.classList.toggle('active',s.id===b.dataset.t));
+    const sec=document.getElementById(b.dataset.t);
+    sec.querySelectorAll('.js-plotly-plot').forEach(el=>{try{Plotly.Plots.resize(el)}catch(e){}});
+    window.scrollTo({top:0});
+  }));
+
+  // Research checklist: progress % + reset (kept for this browser session only)
+  (function(){
+    const cl=document.getElementById('checklist');
+    if(!cl) return;
+    const boxes=Array.from(cl.querySelectorAll('input[type=checkbox]'));
+    const fill=document.getElementById('cl-fill'), pct=document.getElementById('cl-pct');
+    const KEY='isa-checklist-'+document.title;
+    function upd(){
+      const n=boxes.filter(b=>b.checked).length;
+      const p=boxes.length?Math.round(n/boxes.length*100):0;
+      if(fill) fill.style.width=p+'%';
+      if(pct) pct.textContent=p+'%';
+      boxes.forEach(b=>{const li=b.closest('li'); if(li) li.classList.toggle('done',b.checked);});
+    }
+    function save(){try{sessionStorage.setItem(KEY,JSON.stringify(boxes.map(b=>b.checked)))}catch(e){}}
+    function load(){try{const s=sessionStorage.getItem(KEY);if(s){JSON.parse(s).forEach((v,i)=>{if(boxes[i])boxes[i].checked=!!v;})}}catch(e){}}
+    boxes.forEach(b=>b.addEventListener('change',()=>{upd();save();}));
+    const rst=document.getElementById('cl-reset');
+    if(rst) rst.addEventListener('click',()=>{boxes.forEach(b=>b.checked=false);upd();save();});
+    load(); upd();
+  })();
+</script>
+</body>
+</html>

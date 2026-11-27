@@ -1,0 +1,14 @@
+  <h2>CMP and price analysis</h2>
+  {% if p.staleness.stale %}<p><span class="badge b-warn">Stale price</span> {{ p.staleness.message }}</p>{% else %}<p class="muted">{{ p.staleness.message }} Source: {{ p.source }}. {{ p.price_note }}</p>{% endif %}
+  <div class="cards">
+    <div class="card"><div class="l">CMP</div><div class="v">₹{{ fmt_num(p.price) }}</div><div class="s">Prev close ₹{{ fmt_num(p.prev_close) }}</div></div>
+    <div class="card"><div class="l">Day change</div><div class="v">{{ fmt_pct(p.day_change_pct, 2, True) }}</div><div class="s">₹{{ fmt_num(p.day_change) }}</div></div>
+    <div class="card"><div class="l">52W high</div><div class="v">₹{{ fmt_num(p.high_52w) }}</div><div class="s">{{ fmt_pct(p.dist_from_high_pct, 1, True) }} from high</div></div>
+    <div class="card"><div class="l">52W low</div><div class="v">₹{{ fmt_num(p.low_52w) }}</div><div class="s">{{ fmt_pct(p.dist_from_low_pct, 1, True) }} from low</div></div>
+    <div class="card"><div class="l">50-DMA</div><div class="v">₹{{ fmt_num(p.dma50) }}</div></div>
+    <div class="card"><div class="l">200-DMA</div><div class="v">₹{{ fmt_num(p.dma200) }}</div></div>
+    <div class="card"><div class="l">RSI (14)</div><div class="v">{{ fmt_num(p.rsi14, 0) }}</div></div>
+    <div class="card"><div class="l">Volume</div><div class="v">{{ fmt_num(p.volume, 0) }}</div></div>
+  </div>
+  <div class="chart">{{ figs.price | safe }}</div>
+  <div class="panel"><dl class="qa">{% for x in p.explanation %}<dt>{{ x.q }}</dt><dd>{{ x.a }}</dd>{% endfor %}</dl></div>

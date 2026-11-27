@@ -1,0 +1,24 @@
+  <h2>Learn – stock analysis guide</h2>
+  <p class="muted">General financial education that comes with every report. Not investment advice.</p>
+  {% for s in edu_sections %}
+  <div class="panel">
+    <h3>{{ s.title }}</h3>
+    {% for b in s.blocks %}
+      {% if b.t == "h3" %}<h3 style="margin-top:14px">{{ b.text }}</h3>
+      {% elif b.t == "p" %}<p>{{ b.text }}</p>
+      {% elif b.t == "ul" %}<ul class="pts">{% for i in b['items'] %}<li>{{ i }}</li>{% endfor %}</ul>
+      {% elif b.t == "ol" %}<ol class="pts">{% for i in b['items'] %}<li>{{ i }}</li>{% endfor %}</ol>
+      {% elif b.t == "table" %}
+        <div class="tblwrap"><table class="tbl"><thead><tr>{% for h in b.head %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+        <tbody>{% for row in b.rows %}<tr>{% for c in row %}<td>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+      {% elif b.t == "formula" %}<div class="formula">{{ b.text }}{% if b.note %}<span class="fn">{{ b.note }}</span>{% endif %}</div>
+      {% elif b.t == "note" %}<div class="note-box">{{ b.text }}</div>
+      {% elif b.t == "links" %}<ul class="pts">{% for l in b['items'] %}<li><a href="{{ l[1] }}" target="_blank" rel="noopener"><b>{{ l[0] }}</b></a> – {{ l[2] }}</li>{% endfor %}</ul>
+      {% elif b.t == "checklist" %}
+        <div class="cl-head"><span id="cl-pct">0%</span> of checks completed <button id="cl-reset">Reset checklist</button></div>
+        <div class="cl-bar"><div id="cl-fill"></div></div>
+        <ul class="cl" id="checklist">{% for i in b['items'] %}<li><label><input type="checkbox"><span>{{ i }}</span></label></li>{% endfor %}</ul>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endfor %}

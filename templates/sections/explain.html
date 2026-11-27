@@ -1,0 +1,8 @@
+  <h2>Simple-English explanations</h2>
+  <p class="muted">Each ratio answers seven questions. Click to expand.</p>
+  {% for e in res.explanations %}
+  <details class="exp"><summary>{{ e["Metric"] }} — {{ e["Current value"] }}
+    <span class="badge {% if e['Assessment'].startswith('Good') %}b-good{% elif e['Assessment'].startswith('Moderate') or e['Assessment'].startswith('In line') or e['Assessment'].startswith('Estimate') %}b-warn{% elif e['Assessment'].startswith('Concerning') or e['Assessment'].startswith('Serious') or e['Assessment'].startswith('Weak') or e['Assessment'].startswith('High') %}b-crit{% else %}b-na{% endif %}">{{ e["Assessment"].split(" (")[0] }}</span>{% if e.get("Benchmark") and e["Benchmark"] not in ("", "—") %}<span class="badge {{ remark_cls(e["Benchmark"]) }}">{{ e["Benchmark"] }}</span>{% endif %}</summary>
+    <dl class="qa">{% for k in ["1. What does it mean?","2. Why is it important?","3. Current value","4. Good / moderate / concerning?","5. Why might it be at this level?","6. What does it mean for investors?","7. What should investors check next?"] %}<dt>{{ k }}</dt><dd>{{ e[k] }}</dd>{% endfor %}</dl>
+  </details>
+  {% endfor %}

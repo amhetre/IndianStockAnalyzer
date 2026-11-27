@@ -1,0 +1,74 @@
+/* ---------- top nav ---------- */
+.topnav { display: flex; gap: 4px; }
+.topnav a { text-decoration: none; color: var(--muted-foreground); font-weight: 600; font-size: 14px; padding: 7px 12px; border-radius: 9px; }
+.topnav a:hover { color: var(--text); background: var(--surface-2); }
+.topnav a.on { color: var(--accent); background: var(--accent-soft); }
+
+/* ---------- buttons ---------- */
+.btn { border: 0; background: var(--accent); color: var(--primary-foreground); font-weight: 600; font-size: 14px; padding: 9px 18px; border-radius: 10px; }
+.btn:hover { filter: brightness(1.05); }
+.btn:disabled { opacity: .6; cursor: default; }
+.btn.small { padding: 5px 12px; font-size: 13px; }
+.btn.ghost { background: var(--surface-2); color: var(--text); }
+.btn.watch { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+.btn.watch.on { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.link-btn.danger { color: var(--down); }
+.ok-box { color: var(--up); background: var(--up-soft); border-radius: 10px; padding: 10px 14px; margin: 10px 0; font-size: 14px; }
+.small-txt { font-size: 12.5px; }
+
+/* ---------- portfolio page ---------- */
+.portfolio { padding-top: 20px; }
+.pf-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 14px 0; }
+.pf-summary .stat { padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+.pf-summary .stat span { color: var(--muted-foreground); font-size: 12.5px; }
+.pf-summary .stat b { font-size: 22px; font-variant-numeric: tabular-nums; }
+.pf-summary .stat small { font-weight: 600; }
+
+.pf-table { margin: 14px 0; overflow-x: auto; }
+.pf-table table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.pf-table th { text-align: left; color: var(--muted-foreground); font-weight: 600; font-size: 12px; padding: 12px 14px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.pf-table th.num { text-align: right; }
+.pf-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.pf-table tr:last-child td { border-bottom: 0; }
+.pf-table .sym { font-weight: 700; color: var(--text); text-decoration: none; }
+.pf-table .sym:hover { color: var(--accent); }
+.pf-table .sub { color: var(--muted-foreground); font-size: 12px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pf-table td.num .sub { margin-left: auto; }
+.pf-table tr.lot td { background: var(--surface-2); padding-top: 6px; padding-bottom: 6px; }
+.weight { display: inline-block; width: 46px; height: 6px; border-radius: 3px; background: var(--surface-2); margin-right: 8px; vertical-align: middle; overflow: hidden; }
+.weight i { display: block; height: 100%; background: var(--accent); }
+
+.pf-form { padding: 16px; margin: 14px 0; }
+.pf-form h3, .pf-alerts h3 { margin: 0 0 12px; font-size: 16px; }
+.pf-fields { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-top: 12px; }
+.pf-fields label { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; color: var(--muted-foreground); font-weight: 600; }
+.pf-fields input, .alert-edit input {
+  border: 1.5px solid var(--border); background: var(--surface); color: var(--text);
+  border-radius: 9px; padding: 8px 10px; font: inherit; font-size: 14px; width: 150px;
+}
+.pf-fields input:focus, .alert-edit input:focus { outline: 0; border-color: var(--accent); }
+.picked { display: flex; align-items: center; gap: 10px; min-height: 40px; }
+
+.alert-cell, .alert-edit { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.alert-edit input { width: 100px; padding: 5px 8px; }
+.pf-alerts { padding: 16px; margin: 14px 0; }
+.pf-alerts-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.pf-alerts-head h3 { margin: 0; }
+.pf-alerts-head > span { display: flex; gap: 8px; align-items: center; }
+.alert-log { list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.alert-log .pill { margin-right: 8px; }
+
+/* ---------- ads ---------- */
+.ad-slot { margin: 18px 0; text-align: center; min-height: 90px; }
+.ad-slot .ad-label { display: block; font-size: 10.5px; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+.ad-placeholder { border: 1.5px dashed var(--border); border-radius: 12px; color: var(--muted-foreground); font-size: 13px; padding: 28px; }
+
+@media (max-width: 720px) {
+  .pf-summary { grid-template-columns: repeat(2, 1fr); }
+  .topnav { order: 3; }
+  .pf-fields input { width: 130px; }
+}
+.portfolio .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12.5px; background: var(--surface-2); }
+.portfolio .pill.up { background: var(--up-soft); }
+.portfolio .pill.down { background: var(--down-soft); }
+.report-id .watch { margin-top: 10px; }
